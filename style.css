@@ -1,0 +1,14 @@
+body {
+  font-family: sans-serif;
+  max-width: 800px;
+  margin: auto;
+  padding: 1rem;
+  background-color: #fdfdfd;
+}
+
+
+.gallery img {
+  width: 200px;
+  margin: 10px;
+  border: 1px solid #ccc;
+}
