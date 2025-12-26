@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Your Name</title>
+  <title>Hayat White</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -15,19 +15,149 @@
   </nav>
 
   <main>
-    <h1>Your Name</h1>
+    <h1>Hayat White</h1>
     <p class="subtitle">
-      Software Developer | Researcher | Student
+      Software Engineer
     </p>
 
     <section>
       <h2>About Me</h2>
       <p>
         Brief intro. What you work on, what you’re interested in, and what
-        someone should know after landing here.
+        someone should know after landing here.<br>
+        My name is, as the page says, Hayat White. I am a very curious person who like to explore and understand. I like to work hard because I
+        like to see what I can really do. This attitude has pushed me in varying directions throughout my life, but I have been
+        fortunate enough to be able to study various passions and make a career from the skills I have developed.<br>
+        I am a graduate from California State University, Chico with a Masters of science in Computer Science. I received my Bachelors 
+        also from Chico State, in Computer Science with a minor in Mathematics. Before this, I attended Butte Community College to pursue
+        and obtain Associate degrees in Computer Science, Physics and Mathematics. <br>
+        I have been working at Oregrown in Chico as a Contracted Software Engineer since May of 2025. During this period, I have been able to increase
+        technical abilities in the design, development and implementation processes while working with Python.  
       </p>
     </section>
   </main>
+  <h1>Snake</h1>
+  <div class="score">Score: <span id="score">0</span></div>
+  <button id="startBtn">Start Game</button>
+  <canvas id="game" width="400" height="400"></canvas>
+  <script>
+    const canvas = document.getElementById("game");
+    const ctx = canvas.getContext("2d");
+    let gameInterval = null;
+    let gameStarted = false;
+    const gridSize = 20;
+    const tileCount = canvas.width / gridSize;
 
+    let snake = [{ x: 10, y: 10 }];
+    let direction = { x: 1, y: 0 };
+    let food = spawnFood();
+    let score = 0;
+    let gameOver = false;
+
+    document.addEventListener("keydown", e => {
+      switch (e.key) {
+        case "ArrowUp":
+          if (direction.y === 0) direction = { x: 0, y: -1 };
+          break;
+        case "ArrowDown":
+          if (direction.y === 0) direction = { x: 0, y: 1 };
+          break;
+        case "ArrowLeft":
+          if (direction.x === 0) direction = { x: -1, y: 0 };
+          break;
+        case "ArrowRight":
+          if (direction.x === 0) direction = { x: 1, y: 0 };
+          break;
+      }
+    });
+    document.getElementById("startBtn").onclick = () => {
+      resetGame();
+      startGame();
+    };
+
+    function startGame() {
+      if (gameStarted) return;
+      gameStarted = true;
+      gameInterval = setInterval(update, 100);
+    }
+
+    function resetGame() {
+      clearInterval(gameInterval);
+      gameStarted = false;
+      gameOver = false;
+      score = 0;
+      snake = [{ x: 10, y: 10 }];
+      direction = { x: 1, y: 0 };
+      food = spawnFood();
+      document.getElementById("score").textContent = score;
+      draw();
+    }
+    function spawnFood() {
+      return {
+        x: Math.floor(Math.random() * tileCount),
+        y: Math.floor(Math.random() * tileCount)
+      };
+    }
+
+    function update() {
+      if (gameOver) return;
+
+      let head = {
+        x: snake[0].x + direction.x,
+        y: snake[0].y + direction.y
+      };
+
+      // Wrap around edges
+      head.x = (head.x + tileCount) % tileCount;
+      head.y = (head.y + tileCount) % tileCount;
+
+      // Self collision
+      for (let part of snake) {
+        if (head.x === part.x && head.y === part.y) {
+          endGame();
+          return;
+        }
+      }
+
+      snake.unshift(head);
+
+      // Eat food
+      if (head.x === food.x && head.y === food.y) {
+        score++;
+        document.getElementById("score").textContent = score;
+        food = spawnFood();
+      } else {
+        snake.pop();
+      }
+
+      draw();
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Food
+      ctx.fillStyle = "red";
+      ctx.fillRect(food.x * gridSize, food.y * gridSize, gridSize, gridSize);
+
+      // Snake
+      ctx.fillStyle = "green";
+      for (let part of snake) {
+        ctx.fillRect(
+          part.x * gridSize,
+          part.y * gridSize,
+          gridSize,
+          gridSize
+        );
+      }
+    }
+
+    function endGame() {
+      gameOver = true;
+      alert("Game Over! Score: " + score);
+    }
+
+    
+</script>
 </body>
 </html>
