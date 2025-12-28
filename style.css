@@ -24,8 +24,6 @@ main {
   padding: 0 1rem;
 }
 
-
-
 .about {
   display: flex;
   flex-direction: row;
@@ -36,6 +34,51 @@ main {
 .about img {
   width: 50%;
   height: auto;
+}
+
+
+
+.subtitle {
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+.projects {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+
+.projects img {
+  width: 10%;
+  height: auto;
+}
+
+.card {
+  border: 1px solid #ddd;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-radius: 6px;
+}
+.card img{
+  width: 10%;
+  height: auto;
+}
+
+
+.date {
+  color: #777;
+  font-size: 0.9rem;
+}
+
+canvas {
+  border: 2px solid #333;
+  margin-top: 1rem;
+}
+.score {
+  font-size: 1.2rem;
+  margin-top: 0.5rem;
 }
 
 .corner-images {
@@ -50,33 +93,6 @@ main {
 }
 
 .corner-images img {
-  width: 120px;
+  width: 240px;
   height: auto;
-}
-
-
-.subtitle {
-  color: #666;
-  margin-bottom: 2rem;
-}
-
-.card {
-  border: 1px solid #ddd;
-  padding: 1.5rem;
-  margin-bottom: 1.5rem;
-  border-radius: 6px;
-}
-
-.date {
-  color: #777;
-  font-size: 0.9rem;
-}
-
-canvas {
-  border: 2px solid #333;
-  margin-top: 1rem;
-}
-.score {
-  font-size: 1.2rem;
-  margin-top: 0.5rem;
 }
