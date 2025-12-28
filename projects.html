@@ -19,23 +19,109 @@
     <section class="card">
       <h2>Self Driving Steve</h2>
       <p>
-        Explored and used different technologies to deploy a user account based multiplayer
-        Chess game. This project used Django as the web framework
-        One-sentence description of what the project does and why it matters.
+        Implemented a custom lane-detection system using first principles with OpenCV, integrating
+        Canny edge detection, Hough line transforms, Geometric filtering and region-of-interest
+        optimization to compute lane boundaries and steering adjustments in real time. To accomplish
+        this I designed a multithreaded real-time vision pipeline using C++11 threads, mutexes, atomic
+        flags and conditional variables to parallelize video capture, image processing, and 
+        network communication. This project was programmed onto a Nvidia Orin system which transmitted
+        the vehicle controls back to my desktop to steer a car in Gmod.
       </p>
-      <p><strong>Tech:</strong> C++, Nvidia Orin, OpenCV, Lane following</p>
-      <a href="#">GitHub</a>
+      <p><strong>Tech:</strong> C++, Nvidia Orin, OpenCV, Windows input controls,Socket Programming</p>
+      <p><strong>CODE ON REQUEST</strong>
+    </section>
+
+    <section class="card">
+      <h2>Text-Based Image Search</h2>
+      <p>
+        This project sought to implement a text-based image search system where related
+        images can be queried through a text description. The system was built in 3 parts
+        a text encoder, image encoder and a neural network. A pre-trained text encoded (MiniLM-L6-v2) was
+        used to create a vector representation of the important features that is fed into
+        our neural network. That network would then predict the image feature vector. Using
+        a pre-trained image encoder(Dinov2) we created image feature vectors for images in our
+        dataset(TextCaps[1]). We then used cosine similarity to compare the model we trained 
+        image feature vector generated from the user to one from the pretrained model to find
+        the most similar image. This was similar to a Google search. This was a Group Project
+        and I worked on finding and testing the text feature extractor and hyperparameter search.
+        The project successfully implemented and evaluated the text-based image search system.
+        The model performed somewhat well with the most strength in the recall score. This meant
+        The model was effective at retrieving semantically relevant image content based on the
+        provided prompt. The model did however produce low precision scores meaning specific results
+        were a struggle. Our model was producing the correct image within the top ~11 results 
+        demonstrating low accuracy. This could have suggested the dataset had too much variability
+        in the semantics of the captions, leading to poor generalization.
+      </p>
+      <p><strong>Tech:</strong> Python, Torch, Neural Networks, A100</p>
+      <a href="#">https://github.com/r-butl/TextBasedImageSearch</a>
     </section>
 
     <section class="card">
       <h2>Online Chess</h2>
       <p>
         Explored and used different technologies to deploy a user account based multiplayer
-        Chess game. This project used Django as the web framework
-        One-sentence description of what the project does and why it matters.
+        Chess game. This project started as a simple HTML page that analyzed the differences
+        between Javascript and jQuery for scripting and DOM manipulation of the website and Chess board.
+        I then started on implementing the mulitplayer website with multiple pages
+        that used dynamic server side rendered pages. At this point, the project began to use 
+        Django as the Web Framework and the Google Cloud Platform for deployment. The chess moves
+        for the game used the Python-Chess library to validate moves and PostGreSQL as the Database.
+        The site had a simple system to challenge other users and featured a global game history.
+        The final stages of this project transistioned the Ajax Polling to Websockets and implemented
+        Django Channels for communication. This change allowed for real-time communication between users.
+        The outcome from this project was a quick to deploy containerized website that featured a user based 
+        real-time multiplayer Chess game, Global and in-game chat, and game history.
       </p>
-      <p><strong>Tech:</strong> Python, Django, Docker</p>
-      <a href="#">GitHub</a>
+      <p><strong>Tech:</strong> Python, Django, Docker, Git Codespaces, Google Cloud Platform, Websockets</p>
+      <p><strong>CODE ON REQUEST</strong>
+    </section>
+    
+    <section class="card">
+      <h2>Simple-MicroService</h2>
+      <p>
+        This project centered around deployment for webservice and API use. The Simple-MicroService
+        was a simple microservice that used NodeJS, Python, Redis and Mongo. Node was used for the 
+        Frontend application/API gateway. The backend was MongoDB and Redis while the Quote service
+        ran using python3, pymongo, redis and flask. The hosting was done using NGINX. This project was
+        great for developing skills in deployment as well as design in use for APIs.
+      </p>
+      <p><strong>Tech:</strong> python, NodeJS, NGINX, Redis, Mongodb, flask</p>
+      <p><strong>CODE ON REQUEST</strong>
+    </section>
+
+    <section class="card">
+      <h2>Prime Number Sieve</h2>
+      <p>
+        RSA key encryptions are built upon prime numbers. The goal of this project was to use parallel
+        computing techniques to generate prime numbers quickly to crack RSA keys. Openmp and MPI were tested
+        and successful in C for this problem. Maximum speed up was obtained with the OpenMP version of the code.
+        This could have been due to the structure of the MPI code. The project was successful in cracking RSA keys
+        up to RSA20. Options were explored to get beyond the limits of the 64 bit system but ultimately unfinished.
+      </p>
+      <p><strong>Tech:</strong> C, OpenMP, MPI, Parallel Computing</p>
+      <p><strong>CODE ON REQUEST</strong>
+    </section>
+
+    <section class="card">
+      <h2>To My Peers</h2>
+      <p>
+        A Peer to Peer file transfer system aimed to allow users to create a shared databases without cloud
+        services. This project used Windows Socket programming to allow users to connect and share data.
+        Portfowarding was used to allow users to share information over the internet. The application was primarily
+        used in local networks due to security concerns and underdeveloped encrpytion for data. Application did allow
+        file transfer of any size over networks.
+      </p>
+      <p><strong>Tech:</strong> C++, Windows Threads, Wireshark, Socket Programming</p>
+      <p><strong>CODE ON REQUEST</strong>
+    </section>
+
+    <section class="card">
+      <h2>GPL Complier</h2>
+      <p>
+        
+      </p>
+      <p><strong>Tech:</strong> C++, Flex, Bison</p>
+      <p><strong>CODE ON REQUEST</strong>
     </section>
 
   </main>
