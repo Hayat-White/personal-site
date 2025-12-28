@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Hayat White</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -20,11 +20,11 @@
       Software Engineer
     </p>
 
-    <section>
+    <section class="about">
+      <img src="images/Personal_image.jpg" alt="Profile photo">
+      <div class="about-text">
       <h2>About Me</h2>
       <p>
-        Brief intro. What you work on, what you’re interested in, and what
-        someone should know after landing here.<br>
         My name is, as the page says, Hayat White. I am a very curious person who like to explore and understand. I work hard as I am
         an avid learner and enjoy expanding my understanding. This attitude has pushed me in various directions and I have been
         fortunate enough to study these passions and make a career from the skills I have developed.<br>
@@ -32,15 +32,26 @@
         in Computer Science with a minor in Mathematics as well during my time at Chico State. Before this, I attended Butte Community College to pursue
         and obtain Associate degrees in Computer Science, Physics and Mathematics. <br>
         Since May of 2025, I have been working at Oregrown in Chico as a Contracted Software Engineer. During this time, I have been able to gain
-        experience and demostrate my technical abilities in the design, development and implementation processes while working with Python.  
+        experience and demostrate my technical abilities in the design, development and implementation processes while working with Python.<br>  
       </p>
+      <h1>Snake</h1>
+      <div class="score">Score: <span id="score">0</span></div>
+      <canvas id="game" width="200" height="200"></canvas>
+      <button id="startBtn">Start Game</button>
+      </div>
+      
     </section>
+    
   </main>
-  <h1>Snake</h1>
-  <div class="score">Score: <span id="score">0</span></div>
-  <button id="startBtn">Start Game</button>
-  <canvas id="game" width="400" height="400"></canvas>
-  <script>
+  <div class="corner-images">
+    <img src="images/Chico_State_logo.png" alt="Butte College Logo" >
+    <img src="images/Butte_College_logo.png" alt="Chico State Logo" >
+  </div>
+</body>
+</html>
+
+
+<script>
     const canvas = document.getElementById("game");
     const ctx = canvas.getContext("2d");
     let gameInterval = null;
@@ -159,5 +170,3 @@
 
     
 </script>
-</body>
-</html>
