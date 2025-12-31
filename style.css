@@ -37,12 +37,6 @@ main {
 }
 
 
-
-.subtitle {
-  color: #666;
-  margin-bottom: 2rem;
-}
-
 .projects {
   display: flex;
   flex-direction: row;
@@ -71,12 +65,14 @@ main {
 }
 
 .card img {
-  width: 200px;     /* fixed width works best here */
+  width: 300px;     /* fixed width works best here */
   height: auto;
   object-fit: contain;
   align-self: stretch;
 }
-
+.card-img-large img{
+  width: 600px;
+}
 
 
 .date {
