@@ -60,11 +60,23 @@ main {
   padding: 1.5rem;
   margin-bottom: 1.5rem;
   border-radius: 6px;
+
+  display: flex;
+  gap: 1.5rem;
+  align-items: stretch; /* makes image fill height */
 }
-.card img{
-  width: 10%;
+
+.card-text {
+  flex: 1;
+}
+
+.card img {
+  width: 200px;     /* fixed width works best here */
   height: auto;
+  object-fit: contain;
+  align-self: stretch;
 }
+
 
 
 .date {
@@ -93,6 +105,6 @@ canvas {
 }
 
 .corner-images img {
-  width: 240px;
+  width: 100px;
   height: auto;
 }
