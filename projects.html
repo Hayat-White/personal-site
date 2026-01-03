@@ -24,10 +24,11 @@
         Canny edge detection, Hough line transforms, Geometric filtering and region-of-interest
         optimization to compute lane boundaries and steering adjustments in real time. To accomplish
         this I designed a multithreaded real-time vision pipeline using C++11 threads, mutexes, atomic
-        flags and conditional variables to parallelize video capture, image processing, and 
-        network communication. This project was programmed onto a Nvidia Orin system which transmitted
-        the vehicle controls back to my desktop to steer a car in Gmod.
-        
+        flags and conditional variables to parallelize video capture, image processing, and
+        network communication. This project was programmed onto a Nvidia Orin system, which transmitted
+        the vehicle controls back to my desktop to steer a car in Gmod. The system could function completely
+        autonomously and steer the car along straight/angled roads. The Orin system used had 6 threads and 8 GB
+        of RAM. The system was not fully saturated.
       </p>
       <p><strong>Tech:</strong> C++, Nvidia Orin, OpenCV, Windows input controls, Socket Programming, Embeded System, Paralellism</p>
       <p><strong>CODE ON REQUEST</strong></p>
@@ -43,21 +44,22 @@
       <p>
         This project sought to implement a text-based image search system where related
         images can be queried through a text description. The system was built in 3 parts
-        a text encoder, image encoder and a neural network. A pre-trained text encoded (MiniLM-L6-v2) was
+        : a text encoder, an image encoder, and a neural network. A pre-trained text encoder (MiniLM-L6-v2) was
         used to create a vector representation of the important features that is fed into
         our neural network. That network would then predict the image feature vector. Using
-        a pre-trained image encoder(Dinov2) we created image feature vectors for images in our
-        dataset(TextCaps[1]). We then used cosine similarity to compare the model we trained 
-        image feature vector generated from the user to one from the pretrained model to find
-        the most similar image. This was similar to a Google search. This was a Group Project
-        and I worked on finding and testing the text feature extractor and hyperparameter search.
+        a pre-trained image encoder(Dinov2), we created image feature vectors for images in our
+        dataset(TextCaps[1]). We then used cosine similarity to compare the image feature vectors
+        produced by the model we trained from the user to one from the pretrained model to find
+        the most similar image. This was similar to a Google search. This was a Group Project with four other engineers.
+        I worked on finding and testing the text feature extractor and optimizing its hyperparameters.
         The project successfully implemented and evaluated the text-based image search system.
         The model performed somewhat well with the most strength in the recall score. This meant
-        The model was effective at retrieving semantically relevant image content based on the
-        provided prompt. The model did however produce low precision scores meaning specific results
-        were a struggle. Our model was producing the correct image within the top ~11 results 
+        the model was effective at retrieving semantically relevant image content based on the
+        provided prompt. The model did produce low precision scores, meaning specific results
+        were a struggle. Our model was producing the correct image within the top ~11 results,
         demonstrating low accuracy. This could have suggested the dataset had too much variability
         in the semantics of the captions, leading to poor generalization.
+
       </p>
       <p><strong>Tech:</strong> Python, Torch, Neural Networks, A100</p>
       <a href="#">https://github.com/r-butl/TextBasedImageSearch</a>
@@ -69,17 +71,17 @@
       <div class="card-text">
       <h2>Online Chess</h2>
       <p>
-        Explored and used different technologies to deploy a user account based multiplayer
+        Explored and used different technologies to deploy a user account-based multiplayer
         Chess game. This project started as a simple HTML page that analyzed the differences
-        between Javascript and jQuery for scripting and DOM manipulation of the website and Chess board.
-        I then started on implementing the mulitplayer website with multiple pages
-        that used dynamic server side rendered pages. At this point, the project began to use 
+        between JavaScript and jQuery for scripting and DOM manipulation of the website and chessboard.
+        I then started on implementing the multiplayer website with multiple pages
+        that used dynamic server-side rendered pages. At this point, the project began to use
         Django as the Web Framework and the Google Cloud Platform for deployment. The chess moves
-        for the game used the Python-Chess library to validate moves and PostGreSQL as the Database.
+        for the game used the Python-Chess library to validate moves and PostgreSQL as the Database.
         The site had a simple system to challenge other users and featured a global game history.
-        The final stages of this project transistioned the Ajax Polling to Websockets and implemented
+        The final stages of this project transitioned the Ajax Polling to Websockets and implemented
         Django Channels for communication. This change allowed for real-time communication between users.
-        The outcome from this project was a quick to deploy containerized website that featured a user based 
+        The outcome from this project was a quick-to-deploy containerized website that featured a user-based
         real-time multiplayer Chess game, Global and in-game chat, and game history.
       </p>
       <p><strong>Tech:</strong> Python, Django, Docker, Git Codespaces, Google Cloud Platform, Websockets</p>
@@ -92,13 +94,13 @@
       <div class="card-text">
       <h2>Simple-MicroService</h2>
       <p>
-        This project centered around deployment for webservice and API use. The Simple-MicroService
-        was a simple microservice that used NodeJS, Python, Redis and Mongo. Node was used for the 
+        This project centered around deployment for webservice and API use deployed through the Google Cloud Platform. 
+        The Simple-MicroService was a simple microservice that used NodeJS, Python, Redis and Mongo. Node was used for the 
         Frontend application/API gateway. The backend was MongoDB and Redis while the Quote service
-        ran using python3, pymongo, redis and flask. The hosting was done using NGINX. This project was
-        great for developing skills in deployment as well as design in use for APIs.
+        ran using python3, pymongo, redis and flask. The hosting was done using NGINX inside a VM. The simple microservice
+        project explored deployment using Ansible, Kubernetes, and Docker Compose files. 
       </p>
-      <p><strong>Tech:</strong> Python, NodeJS, NGINX, Redis, Mongodb, Flask, Ansible, Kubernetes</p>
+      <p><strong>Tech:</strong> Python, NodeJS, NGINX, Redis, Mongodb, Flask, Ansible, Kubernetes, Github Actions</p>
       <p><strong>CODE ON REQUEST</strong>
       </div>
     </section>
@@ -108,10 +110,11 @@
       <h2>Prime Number Sieve</h2>
       <p>
         RSA key encryptions are built upon prime numbers. The goal of this project was to use parallel
-        computing techniques to generate prime numbers quickly to crack RSA keys. Openmp and MPI were tested
-        and successful in C for this problem. Maximum speed up was obtained with the OpenMP version of the code.
-        This could have been due to the structure of the MPI code. The project was successful in cracking RSA keys
-        up to RSA20. Options were explored to get beyond the limits of the 64 bit system but ultimately unfinished.
+        computing techniques to speed up the generation of prime numbers to crack RSA keys. Openmp and MPI techniques were explored,
+        tested and ultimately successful in C and C++. Maximum speed up was obtained with the OpenMP version of the code.
+        This could have been due to the structure of the MPI code and the sequential nature of the problem. The project was successful in cracking RSA keys
+        up to RSA20 but were stopped there due to the limitations of the 64 bit system. Options were explored to get beyond the limits of the 64 bit system but 
+        were ultimately unfinished. The OpenMP technique scaled incredibly well for the semi prime factoring.
       </p>
       <p><strong>Tech:</strong> C, OpenMP, MPI, Parallel Computing, Encrpytion</p>
       <p><strong>CODE ON REQUEST</strong>
@@ -123,11 +126,11 @@
       <div class="card-text">
       <h2>ToMyPeers</h2>
       <p>
-        A Peer to Peer file transfer system aimed to allow users to create a shared databases without cloud
-        services. This project used Windows Socket programming to allow users to connect and share data.
+        A Peer to Peer file transfer system aimed to allow users to create shared databases without cloud
+        services. This project used Windows Socket programming to allow users to connect and share data with one another.
         Portfowarding was used to allow users to share information over the internet. The application was primarily
         used in local networks due to security concerns and underdeveloped encrpytion for data. Application did allow
-        file transfer of any size over networks.
+        file transfer of any size over networks. A simple terminal like UI was used but windows application UI code was explored.
       </p>
       <p><strong>Tech:</strong> C++, Windows Threads, Wireshark, Socket Programming</p>
       <p><strong>CODE ON REQUEST</strong>
