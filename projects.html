@@ -110,11 +110,11 @@
       <h2>Prime Number Sieve</h2>
       <p>
         RSA key encryptions are built upon prime numbers. The goal of this project was to use parallel
-        computing techniques to speed up the generation of prime numbers to crack RSA keys. Openmp and MPI techniques were explored,
+        computing techniques to speed up the generation of prime numbers with a sieve method to crack RSA keys. Openmp and MPI techniques were explored,
         tested and ultimately successful in C and C++. Maximum speed up was obtained with the OpenMP version of the code.
         This could have been due to the structure of the MPI code and the sequential nature of the problem. The project was successful in cracking RSA keys
         up to RSA20 but were stopped there due to the limitations of the 64 bit system. Options were explored to get beyond the limits of the 64 bit system but 
-        were ultimately unfinished. The OpenMP technique scaled incredibly well for the semi prime factoring.
+        were ultimately unfinished. The OpenMP technique scaled incredibly well for the semi prime factoring in line with Amdahl's law.
       </p>
       <p><strong>Tech:</strong> C, OpenMP, MPI, Parallel Computing, Encrpytion</p>
       <p><strong>CODE ON REQUEST</strong>
