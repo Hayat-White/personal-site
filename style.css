@@ -48,7 +48,25 @@ main {
   width: 10%;
   height: auto;
 }
+.homepage_title {
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-radius: 6px;
 
+  display: flex;
+  gap: 1.5rem;
+  align-items: stretch; /* makes image fill height */
+
+}
+.homepage_text {
+  flex :1;
+}
+.homepage_title img {
+  width: 100px;     /* fixed width works best here */
+  height: auto;
+  object-fit: contain;
+  align-self: stretch;
+}
 .card {
   border: 1px solid #ddd;
   padding: 1.5rem;
@@ -97,10 +115,10 @@ canvas {
   gap: 0.75rem;
   padding: 0.5rem;
   z-index: 10;
-  pointer-events: none;
 }
 
 .corner-images img {
   width: 100px;
   height: auto;
 }
+
