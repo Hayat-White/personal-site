@@ -88,6 +88,20 @@ main {
   object-fit: contain;
   align-self: stretch;
 }
+.card-company-logos {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+.card-company-logos img {
+  width: auto;
+  max-width: 160px;
+  height: 72px;
+  object-fit: contain;
+  align-self: auto;
+}
 .card-img-large img{
   width: 600px;
 }
