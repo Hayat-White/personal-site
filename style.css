@@ -90,10 +90,11 @@ main {
 }
 .card-company-logos {
   display: flex;
+  flex: 0 0 160px;
+  flex-direction: column;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 1.5rem;
-  margin-top: 1rem;
+  justify-content: center;
+  gap: 1rem;
 }
 .card-company-logos img {
   width: auto;
@@ -101,6 +102,18 @@ main {
   height: 72px;
   object-fit: contain;
   align-self: auto;
+}
+@media (max-width: 640px) {
+  .card-with-company-logos {
+    flex-direction: column;
+  }
+
+  .card-company-logos {
+    flex: 0 0 auto;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
 }
 .card-img-large img{
   width: 600px;
