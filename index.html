@@ -58,19 +58,35 @@
       
     </section>
 
-    <section class="face-detection" aria-labelledby="face-detection-title">
-      <div class="face-detection-copy">
-        <h2 id="face-detection-title">Face Detection</h2>
-        <p>Camera access is requested only when you start. Video is processed in your browser.</p>
-        <div class="face-detection-controls">
+    <section class="camera-lab" aria-labelledby="camera-lab-title">
+      <h2 id="camera-lab-title">Live Sobel Filter</h2>
+      <p>Camera access is requested only when you start. Video is processed in your browser.</p>
+      <div class="camera-controls">
           <button id="startCameraBtn" type="button">Enable camera</button>
           <button id="stopCameraBtn" type="button" disabled>Stop camera</button>
-        </div>
-        <p id="cameraStatus" class="camera-status" role="status" aria-live="polite">Camera is off.</p>
       </div>
-      <div class="camera-preview" id="cameraPreview">
-        <video id="cameraVideo" autoplay muted playsinline aria-label="Live camera preview"></video>
-        <canvas id="faceOverlay" aria-hidden="true"></canvas>
+      <p id="cameraStatus" class="camera-status" role="status" aria-live="polite">Camera is off.</p>
+      <div class="camera-views">
+        <div class="camera-panel">
+          <h3>Camera</h3>
+          <div class="camera-frame">
+            <video id="cameraVideo" autoplay muted playsinline aria-label="Live camera preview"></video>
+          </div>
+        </div>
+        <div class="camera-panel">
+          <h3>Sobel edges</h3>
+          <div class="camera-frame">
+            <canvas id="sobelCanvas" aria-label="Live Sobel edge display"></canvas>
+          </div>
+        </div>
+      </div>
+      <button id="captureFrameBtn" type="button" disabled>Capture frame</button>
+      <div id="capturedFramePanel" class="captured-frame-panel" hidden>
+        <h3>Captured frame</h3>
+        <div class="camera-frame">
+          <canvas id="capturedFrame" aria-label="Unfiltered captured camera frame"></canvas>
+        </div>
+        <a id="downloadFrameLink" class="download-frame" download="camera-frame.png">Download frame</a>
       </div>
     </section>
     
