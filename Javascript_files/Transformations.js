@@ -12,6 +12,7 @@ const stopButton = document.getElementById("stopCameraBtn");
 const processingWidth = 320;
 let stream = null;
 let animationFrame = null;
+let videoFrameRequest = null;
 let previousFrame = null;
 
 startButton.addEventListener("click", startCamera);
@@ -34,7 +35,7 @@ async function startCamera() {
     await video.play();
     stopButton.disabled = false;
     status.textContent = "Camera is on.";
-    animationFrame = requestAnimationFrame(renderSobel);
+    scheduleFrame();
   } catch (error) {
     stopCamera();
     if (error.name === "NotAllowedError") {
@@ -52,9 +53,11 @@ async function startCamera() {
 
 function renderSobel() {
   if (!stream) return;
-  animationFrame = requestAnimationFrame(renderSobel);
 
-  if (!video.videoWidth || !video.videoHeight) return;
+  if (video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA || !video.videoWidth || !video.videoHeight) {
+    scheduleFrame();
+    return;
+  }
 
   const width = processingWidth;
   const height = Math.round(width * video.videoHeight / video.videoWidth);
@@ -123,12 +126,27 @@ function renderSobel() {
   }
 
   sobelContext.putImageData(output, 0, 0);
+  scheduleFrame();
+}
+
+function scheduleFrame() {
+  if (!stream) return;
+
+  if (typeof video.requestVideoFrameCallback === "function") {
+    videoFrameRequest = video.requestVideoFrameCallback(renderSobel);
+  } else {
+    animationFrame = requestAnimationFrame(renderSobel);
+  }
 }
 
 function stopCamera() {
   if (animationFrame !== null) {
     cancelAnimationFrame(animationFrame);
     animationFrame = null;
+  }
+  if (videoFrameRequest !== null && typeof video.cancelVideoFrameCallback === "function") {
+    video.cancelVideoFrameCallback(videoFrameRequest);
+    videoFrameRequest = null;
   }
   if (stream) {
     stream.getTracks().forEach(track => track.stop());
