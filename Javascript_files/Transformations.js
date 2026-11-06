@@ -1,6 +1,8 @@
 const video = document.getElementById("cameraVideo");
 const sobelCanvas = document.getElementById("sobelCanvas");
 const sobelContext = sobelCanvas.getContext("2d");
+const differenceCanvas = document.getElementById("differenceCanvas");
+const differenceContext = differenceCanvas.getContext("2d");
 const sourceCanvas = document.createElement("canvas");
 const sourceContext = sourceCanvas.getContext("2d", { willReadFrequently: true });
 const capturedCanvas = document.getElementById("capturedFrame");
@@ -15,6 +17,7 @@ const captureButton = document.getElementById("captureFrameBtn");
 const processingWidth = 320;
 let stream = null;
 let animationFrame = null;
+let previousFrame = null;
 
 startButton.addEventListener("click", startCamera);
 stopButton.addEventListener("click", stopCamera);
@@ -66,6 +69,9 @@ function renderSobel() {
     sourceCanvas.height = height;
     sobelCanvas.width = width;
     sobelCanvas.height = height;
+    differenceCanvas.width = width;
+    differenceCanvas.height = height;
+    previousFrame = null;
     document.querySelectorAll(".camera-frame").forEach(frame => {
       frame.style.aspectRatio = `${video.videoWidth} / ${video.videoHeight}`;
     });
@@ -73,6 +79,22 @@ function renderSobel() {
 
   sourceContext.drawImage(video, 0, 0, width, height);
   const source = sourceContext.getImageData(0, 0, width, height);
+  const difference = differenceContext.createImageData(width, height);
+  for (let offset = 0; offset < source.data.length; offset += 4) {
+    const change = previousFrame
+      ? (Math.abs(source.data[offset] - previousFrame[offset]) +
+        Math.abs(source.data[offset + 1] - previousFrame[offset + 1]) +
+        Math.abs(source.data[offset + 2] - previousFrame[offset + 2])) / 3
+      : 0;
+    const intensity = Math.min(255, Math.max(0, change - 10) * 5);
+    difference.data[offset] = intensity;
+    difference.data[offset + 1] = intensity;
+    difference.data[offset + 2] = intensity;
+    difference.data[offset + 3] = 255;
+  }
+  differenceContext.putImageData(difference, 0, 0);
+  previousFrame = new Uint8ClampedArray(source.data);
+
   const grayscale = new Float32Array(width * height);
   const output = sobelContext.createImageData(width, height);
 
@@ -136,6 +158,9 @@ function stopCamera() {
   sourceCanvas.height = 0;
   sobelCanvas.width = 0;
   sobelCanvas.height = 0;
+  differenceCanvas.width = 0;
+  differenceCanvas.height = 0;
+  previousFrame = null;
   captureButton.disabled = true;
   stopButton.disabled = true;
   startButton.disabled = false;

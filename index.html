@@ -5,7 +5,7 @@
   <title>Hayat White</title>
   <link rel="stylesheet" href="style.css">
   <script src="Javascript_files/Snake_game.js" defer></script>
-  <script src="Javascript_files/Face_detection.js" defer></script>
+  <script src="Javascript_files/Transformations.js" defer></script>
 </head>
 <body>
 
@@ -59,8 +59,8 @@
     </section>
 
     <section class="camera-lab" aria-labelledby="camera-lab-title">
-      <h2 id="camera-lab-title">Live Sobel Filter</h2>
-      <p>Camera access is requested only when you start. Video is processed in your browser.</p>
+      <h2 id="camera-lab-title">Live Camera Transformations</h2>
+      <p>Camera access is requested only when you start. Video is processed in your browser. Frame differences highlight changes between consecutive frames.</p>
       <div class="camera-controls">
           <button id="startCameraBtn" type="button">Enable camera</button>
           <button id="stopCameraBtn" type="button" disabled>Stop camera</button>
@@ -77,6 +77,12 @@
           <h3>Sobel edges</h3>
           <div class="camera-frame">
             <canvas id="sobelCanvas" aria-label="Live Sobel edge display"></canvas>
+          </div>
+        </div>
+        <div class="camera-panel">
+          <h3>Frame difference</h3>
+          <div class="camera-frame">
+            <canvas id="differenceCanvas" aria-label="Live pixel differences between consecutive frames"></canvas>
           </div>
         </div>
       </div>
