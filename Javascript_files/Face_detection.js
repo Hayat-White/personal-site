@@ -1,5 +1,3 @@
-import { FaceDetector, FilesetResolver } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.22/vision_bundle.mjs";
-
 const video = document.getElementById("cameraVideo");
 const overlay = document.getElementById("faceOverlay");
 const context = overlay.getContext("2d");
@@ -20,6 +18,10 @@ async function startDetection() {
   status.textContent = "Requesting camera access...";
 
   try {
+    if (!window.isSecureContext || !navigator.mediaDevices?.getUserMedia) {
+      throw new Error("Camera access requires HTTPS or localhost.");
+    }
+
     stream = await navigator.mediaDevices.getUserMedia({
       audio: false,
       video: { facingMode: "user" }
@@ -28,6 +30,9 @@ async function startDetection() {
     await video.play();
 
     status.textContent = "Loading face detector...";
+    const { FaceDetector, FilesetResolver } = await import(
+      "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.22/vision_bundle.mjs"
+    );
     const vision = await FilesetResolver.forVisionTasks(
       "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.22/wasm"
     );
@@ -43,9 +48,15 @@ async function startDetection() {
     animationFrame = requestAnimationFrame(detectFaces);
   } catch (error) {
     stopDetection();
-    status.textContent = error.name === "NotAllowedError"
-      ? "Camera permission was denied."
-      : "Could not start face detection. Check camera access and try again.";
+    if (error.name === "NotAllowedError") {
+      status.textContent = "Camera access was blocked. Allow it in your browser's site settings, then try again.";
+    } else if (error.message === "Camera access requires HTTPS or localhost.") {
+      status.textContent = error.message;
+    } else if (error.name === "NotFoundError") {
+      status.textContent = "No camera was found on this device.";
+    } else {
+      status.textContent = "Could not start face detection. Check camera access and network connection, then try again.";
+    }
     startButton.disabled = false;
   }
 }
@@ -102,8 +113,5 @@ function stopDetection() {
   lastStatus = "";
   stopButton.disabled = true;
   startButton.disabled = false;
-  if (status.textContent !== "Camera permission was denied." &&
-      status.textContent !== "Could not start face detection. Check camera access and try again.") {
-    status.textContent = "Camera is off.";
-  }
+  status.textContent = "Camera is off.";
 }
