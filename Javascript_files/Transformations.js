@@ -5,14 +5,9 @@ const differenceCanvas = document.getElementById("differenceCanvas");
 const differenceContext = differenceCanvas.getContext("2d");
 const sourceCanvas = document.createElement("canvas");
 const sourceContext = sourceCanvas.getContext("2d", { willReadFrequently: true });
-const capturedCanvas = document.getElementById("capturedFrame");
-const capturedContext = capturedCanvas.getContext("2d");
-const capturedPanel = document.getElementById("capturedFramePanel");
-const downloadLink = document.getElementById("downloadFrameLink");
 const status = document.getElementById("cameraStatus");
 const startButton = document.getElementById("startCameraBtn");
 const stopButton = document.getElementById("stopCameraBtn");
-const captureButton = document.getElementById("captureFrameBtn");
 
 const processingWidth = 320;
 let stream = null;
@@ -21,7 +16,6 @@ let previousFrame = null;
 
 startButton.addEventListener("click", startCamera);
 stopButton.addEventListener("click", stopCamera);
-captureButton.addEventListener("click", captureFrame);
 
 async function startCamera() {
   startButton.disabled = true;
@@ -129,18 +123,6 @@ function renderSobel() {
   }
 
   sobelContext.putImageData(output, 0, 0);
-  captureButton.disabled = false;
-}
-
-function captureFrame() {
-  if (!stream || !video.videoWidth || !video.videoHeight) return;
-
-  capturedCanvas.width = video.videoWidth;
-  capturedCanvas.height = video.videoHeight;
-  capturedContext.drawImage(video, 0, 0, capturedCanvas.width, capturedCanvas.height);
-  downloadLink.href = capturedCanvas.toDataURL("image/png");
-  capturedPanel.hidden = false;
-  status.textContent = "Unfiltered frame captured.";
 }
 
 function stopCamera() {
@@ -161,7 +143,6 @@ function stopCamera() {
   differenceCanvas.width = 0;
   differenceCanvas.height = 0;
   previousFrame = null;
-  captureButton.disabled = true;
   stopButton.disabled = true;
   startButton.disabled = false;
   status.textContent = "Camera is off.";
