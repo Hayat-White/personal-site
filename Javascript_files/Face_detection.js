@@ -1,19 +1,26 @@
 const video = document.getElementById("cameraVideo");
-const overlay = document.getElementById("faceOverlay");
-const context = overlay.getContext("2d");
+const sobelCanvas = document.getElementById("sobelCanvas");
+const sobelContext = sobelCanvas.getContext("2d");
+const sourceCanvas = document.createElement("canvas");
+const sourceContext = sourceCanvas.getContext("2d", { willReadFrequently: true });
+const capturedCanvas = document.getElementById("capturedFrame");
+const capturedContext = capturedCanvas.getContext("2d");
+const capturedPanel = document.getElementById("capturedFramePanel");
+const downloadLink = document.getElementById("downloadFrameLink");
 const status = document.getElementById("cameraStatus");
 const startButton = document.getElementById("startCameraBtn");
 const stopButton = document.getElementById("stopCameraBtn");
+const captureButton = document.getElementById("captureFrameBtn");
 
+const processingWidth = 320;
 let stream = null;
-let detector = null;
 let animationFrame = null;
-let lastStatus = "";
 
-startButton.addEventListener("click", startDetection);
-stopButton.addEventListener("click", stopDetection);
+startButton.addEventListener("click", startCamera);
+stopButton.addEventListener("click", stopCamera);
+captureButton.addEventListener("click", captureFrame);
 
-async function startDetection() {
+async function startCamera() {
   startButton.disabled = true;
   status.textContent = "Requesting camera access...";
 
@@ -28,26 +35,11 @@ async function startDetection() {
     });
     video.srcObject = stream;
     await video.play();
-
-    status.textContent = "Loading face detector...";
-    const { FaceDetector, FilesetResolver } = await import(
-      "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.22-rc.20250304/vision_bundle.mjs"
-    );
-    const vision = await FilesetResolver.forVisionTasks(
-      "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.22-rc.20250304/wasm/"
-    );
-    detector = await FaceDetector.createFromOptions(vision, {
-      baseOptions: {
-        modelAssetPath: "https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/1/blaze_face_short_range.tflite"
-      },
-      runningMode: "VIDEO",
-      minDetectionConfidence: 0.5
-    });
-
     stopButton.disabled = false;
-    animationFrame = requestAnimationFrame(detectFaces);
+    status.textContent = "Camera is on.";
+    animationFrame = requestAnimationFrame(renderSobel);
   } catch (error) {
-    stopDetection();
+    stopCamera();
     if (error.name === "NotAllowedError") {
       status.textContent = "Camera access was blocked. Allow it in your browser's site settings, then try again.";
     } else if (error.message === "Camera access requires HTTPS or localhost.") {
@@ -55,45 +47,81 @@ async function startDetection() {
     } else if (error.name === "NotFoundError") {
       status.textContent = "No camera was found on this device.";
     } else {
-      status.textContent = "Could not start face detection. Check camera access and network connection, then try again.";
+      status.textContent = "Could not start the camera. Check camera access and try again.";
     }
     startButton.disabled = false;
   }
 }
 
-function detectFaces() {
-  if (!detector || video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) {
-    animationFrame = requestAnimationFrame(detectFaces);
-    return;
+function renderSobel() {
+  if (!stream) return;
+  animationFrame = requestAnimationFrame(renderSobel);
+
+  if (!video.videoWidth || !video.videoHeight) return;
+
+  const width = processingWidth;
+  const height = Math.round(width * video.videoHeight / video.videoWidth);
+  if (sourceCanvas.width !== width || sourceCanvas.height !== height) {
+    sourceCanvas.width = width;
+    sourceCanvas.height = height;
+    sobelCanvas.width = width;
+    sobelCanvas.height = height;
+    document.querySelectorAll(".camera-frame").forEach(frame => {
+      frame.style.aspectRatio = `${video.videoWidth} / ${video.videoHeight}`;
+    });
   }
 
-  if (overlay.width !== video.videoWidth || overlay.height !== video.videoHeight) {
-    overlay.width = video.videoWidth;
-    overlay.height = video.videoHeight;
+  sourceContext.drawImage(video, 0, 0, width, height);
+  const source = sourceContext.getImageData(0, 0, width, height);
+  const grayscale = new Float32Array(width * height);
+  const output = sobelContext.createImageData(width, height);
+
+  for (let pixel = 0; pixel < grayscale.length; pixel++) {
+    const offset = pixel * 4;
+    grayscale[pixel] =
+      source.data[offset] * 0.299 +
+      source.data[offset + 1] * 0.587 +
+      source.data[offset + 2] * 0.114;
+    output.data[offset + 3] = 255;
   }
 
-  const results = detector.detectForVideo(video, performance.now());
-  context.clearRect(0, 0, overlay.width, overlay.height);
-  context.strokeStyle = "#42e695";
-  context.lineWidth = Math.max(2, overlay.width / 240);
-
-  for (const detection of results.detections) {
-    const box = detection.boundingBox;
-    context.strokeRect(box.originX, box.originY, box.width, box.height);
+  for (let y = 1; y < height - 1; y++) {
+    for (let x = 1; x < width - 1; x++) {
+      const pixel = y * width + x;
+      const topLeft = grayscale[pixel - width - 1];
+      const top = grayscale[pixel - width];
+      const topRight = grayscale[pixel - width + 1];
+      const left = grayscale[pixel - 1];
+      const right = grayscale[pixel + 1];
+      const bottomLeft = grayscale[pixel + width - 1];
+      const bottom = grayscale[pixel + width];
+      const bottomRight = grayscale[pixel + width + 1];
+      const horizontal = -topLeft + topRight - 2 * left + 2 * right - bottomLeft + bottomRight;
+      const vertical = -topLeft - 2 * top - topRight + bottomLeft + 2 * bottom + bottomRight;
+      const magnitude = Math.min(255, Math.hypot(horizontal, vertical) / 4);
+      const offset = pixel * 4;
+      output.data[offset] = magnitude;
+      output.data[offset + 1] = magnitude;
+      output.data[offset + 2] = magnitude;
+    }
   }
 
-  const nextStatus = results.detections.length
-    ? `${results.detections.length} face${results.detections.length === 1 ? "" : "s"} detected.`
-    : "No face detected.";
-  if (nextStatus !== lastStatus) {
-    status.textContent = nextStatus;
-    lastStatus = nextStatus;
-  }
-
-  animationFrame = requestAnimationFrame(detectFaces);
+  sobelContext.putImageData(output, 0, 0);
+  captureButton.disabled = false;
 }
 
-function stopDetection() {
+function captureFrame() {
+  if (!stream || !video.videoWidth || !video.videoHeight) return;
+
+  capturedCanvas.width = video.videoWidth;
+  capturedCanvas.height = video.videoHeight;
+  capturedContext.drawImage(video, 0, 0, capturedCanvas.width, capturedCanvas.height);
+  downloadLink.href = capturedCanvas.toDataURL("image/png");
+  capturedPanel.hidden = false;
+  status.textContent = "Unfiltered frame captured.";
+}
+
+function stopCamera() {
   if (animationFrame !== null) {
     cancelAnimationFrame(animationFrame);
     animationFrame = null;
@@ -102,15 +130,13 @@ function stopDetection() {
     stream.getTracks().forEach(track => track.stop());
     stream = null;
   }
-  if (detector) {
-    detector.close();
-    detector = null;
-  }
+
   video.srcObject = null;
-  context.clearRect(0, 0, overlay.width, overlay.height);
-  overlay.width = 0;
-  overlay.height = 0;
-  lastStatus = "";
+  sourceCanvas.width = 0;
+  sourceCanvas.height = 0;
+  sobelCanvas.width = 0;
+  sobelCanvas.height = 0;
+  captureButton.disabled = true;
   stopButton.disabled = true;
   startButton.disabled = false;
   status.textContent = "Camera is off.";
