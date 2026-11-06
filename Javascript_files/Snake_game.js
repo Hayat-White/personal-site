@@ -5,7 +5,7 @@ let gameStarted = false;
 const gridSize = 20;
 const tileCount = canvas.width / gridSize;
 
-let snake = [{ x: 10, y: 10 }];
+let snake = [{ x: Math.floor(tileCount / 2), y: Math.floor(tileCount / 2) }];
 let direction = { x: 1, y: 0 };
 let food = spawnFood();
 let score = 0;
@@ -43,17 +43,25 @@ function resetGame() {
     gameStarted = false;
     gameOver = false;
     score = 0;
-    snake = [{ x: 10, y: 10 }];
+    snake = [{ x: Math.floor(tileCount / 2), y: Math.floor(tileCount / 2) }];
     direction = { x: 1, y: 0 };
     food = spawnFood();
     document.getElementById("score").textContent = score;
     draw();
 }
 function spawnFood() {
-    return {
-        x: Math.floor(Math.random() * tileCount),
-        y: Math.floor(Math.random() * tileCount)
-    };
+    const availableCells = [];
+
+    for (let y = 0; y < tileCount; y++) {
+        for (let x = 0; x < tileCount; x++) {
+            if (!snake.some(part => part.x === x && part.y === y)) {
+                availableCells.push({ x, y });
+            }
+        }
+    }
+
+    if (availableCells.length === 0) return null;
+    return availableCells[Math.floor(Math.random() * availableCells.length)];
 }
 
 function update() {
@@ -83,6 +91,13 @@ function update() {
         score++;
         document.getElementById("score").textContent = score;
         food = spawnFood();
+        if (!food) {
+            draw();
+            gameOver = true;
+            clearInterval(gameInterval);
+            alert("You filled the board! Score: " + score);
+            return;
+        }
     } else {
         snake.pop();
     }
@@ -94,8 +109,10 @@ function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // Food
-    ctx.fillStyle = "red";
-    ctx.fillRect(food.x * gridSize, food.y * gridSize, gridSize, gridSize);
+    if (food) {
+        ctx.fillStyle = "red";
+        ctx.fillRect(food.x * gridSize, food.y * gridSize, gridSize, gridSize);
+    }
 
     // Snake
     ctx.fillStyle = "green";
